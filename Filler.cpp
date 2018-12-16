@@ -29,6 +29,10 @@ int Filler::Handle(const Event::Id& e, const EventContext& c)
 			if (ButtonChange::None == c.mouseButton.state) {
 				break;
 			}
+			if (!_canvas->IsInside(c.mouseButton.x, c.mouseButton.y)) {
+				_state = ButtonChange::Up;
+				return 0;
+			}
 			auto old_state = _state;
 			_state = c.mouseButton.state;
 			if (ButtonChange::Up == c.mouseButton.state &&
