@@ -59,21 +59,9 @@ bool Canvas::Init(HWND hWnd, HDC hDC)
 	return true;
 }
 
-struct Direction
-{
-	enum Id {
-		None = 0,
-		Right,
-		Up,
-		Left,
-		Down
-	};
-};
-
 struct Node {
 	const int x;
 	const int y;
-	const Direction::Id direction;
 };
 typedef vector<Node> Branches;
 
@@ -81,7 +69,6 @@ class FillIter {
 	Canvas* canvas;
 	int x;
 	int y;
-	Direction::Id direction;
 	COLORREF color;
 	Branches branches;
 
@@ -129,22 +116,22 @@ class FillIter {
 
 		int nextX, nextY;
 		if (evalRight(nextX, nextY)) {
-			branches.push_back(Node{ nextX, nextY, Direction::Right });
+			branches.push_back(Node{ nextX, nextY });
 		}
 		if (evalUp(nextX, nextY)) {
-			branches.push_back(Node{ nextX, nextY, Direction::Up });
+			branches.push_back(Node{ nextX, nextY });
 		}
 		if (evalLeft(nextX, nextY)) {
-			branches.push_back(Node{ nextX, nextY, Direction::Left });
+			branches.push_back(Node{ nextX, nextY });
 		}
 		if (evalDown(nextX, nextY)) {
-			branches.push_back(Node{ nextX, nextY, Direction::Down });
+			branches.push_back(Node{ nextX, nextY });
 		}
 	}
 
 public:
 	FillIter(Canvas* canvas, int x, int y) :
-		canvas(canvas), x(x), y(y), direction(Direction::None)
+		canvas(canvas), x(x), y(y)
 	{
 		branches.reserve(canvas->Count());
 		eval();
@@ -167,7 +154,6 @@ public:
 			auto iter = branches.at(branches.size() - 1);
 			x = iter.x;
 			y = iter.y;
-			direction = iter.direction;
 			if (color == canvas->Color(x, y)) {
 				eval();
 				return;
